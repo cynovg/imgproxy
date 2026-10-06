@@ -69,6 +69,8 @@ func (p *Parser) applyURLOption(
 		return p.applyPixelateOption(ctx, o, args)
 	case "watermark", "wm":
 		return p.applyWatermarkOption(ctx, o, args)
+	case "watermark_text", "wmt":
+		return p.applyWatermarkTextOption(ctx, o, args)
 	case "strip_metadata", "sm":
 		return p.applyStripMetadataOption(ctx, o.Main(), args)
 	case "keep_copyright", "kcr":
