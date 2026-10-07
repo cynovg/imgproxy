@@ -16,15 +16,12 @@ import (
 	"github.com/imgproxy/imgproxy/v4/options/keys"
 )
 
-// staticProvider is a simple implementation of ImageProvider, which returns
-// a static saved image data and headers.
 type dynamicProvider struct {
 	data    imagedata.ImageData
 	headers http.Header
 	idf     imagedata.Factory
 }
 
-// Get returns the static image data and headers stored in the provider.
 func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.ImageData, http.Header, error) {
 	if text := o.GetString(keys.WatermarkText, ""); text != "" {
 		fontPath := "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -78,7 +75,6 @@ func GenerateWatermarkPNG(text string, fontSize float64, fontPath string) ([]byt
 	return buf.Bytes(), nil
 }
 
-// Close releases the static image data held by the provider.
 func (s *dynamicProvider) Close() error {
 	if s.data != nil {
 		return s.data.Close()
@@ -86,7 +82,6 @@ func (s *dynamicProvider) Close() error {
 	return nil
 }
 
-// NewDynamicProvider creates a new ImageProvider from either a base64 string, file path, or URL
 func NewDynamicProvider(
 	ctx context.Context,
 	c *DynamicConfig,
