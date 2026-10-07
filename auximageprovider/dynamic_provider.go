@@ -3,7 +3,9 @@ package auximageprovider
 import (
 	"context"
 	"net/http"
+	"fmt"
 
+	"github.com/imgproxy/imgproxy/v4/options/keys"
 	"github.com/imgproxy/imgproxy/v4/imagedata"
 	"github.com/imgproxy/imgproxy/v4/options"
 )
@@ -17,9 +19,14 @@ type dynamicProvider struct {
 }
 
 // Get returns the static image data and headers stored in the provider.
-func (s *dynamicProvider) Get(_ context.Context, _ *options.Options) (imagedata.ImageData, http.Header, error) {
-	// Ref() increments the ref count so the caller can Close() independently
-	// without releasing the shared underlying data.
+func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.ImageData, http.Header, error) {
+	if text := o.GetString(keys.WatermarkText, ""); text != "" {
+		data, err := s.idf.NewFromBase64(text)
+		if err != nil {
+			return nil, nil, fmt.Errorf("watermark_text: %w", err)
+		}
+		return data, make(http.Header), nil
+	}
 	return s.data.Ref(), s.headers.Clone(), nil
 }
 
