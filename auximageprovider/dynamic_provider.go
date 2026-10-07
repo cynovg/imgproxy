@@ -30,7 +30,7 @@ func (s *dynamicProvider) Close() error {
 // NewDynamicProvider creates a new ImageProvider from either a base64 string, file path, or URL
 func NewDynamicProvider(
 	ctx context.Context,
-	c *StaticConfig,
+	c *DynamicConfig,
 	desc string,
 	idf imagedata.Factory,
 ) (Provider, error) {
