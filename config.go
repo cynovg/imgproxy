@@ -80,9 +80,9 @@ func LoadConfigFromEnv(c *Config) (*Config, error) {
 		return nil, err
 	}
 
-	// if _, err = auximageprovider.LoadWatermarkStaticConfigFromEnv(&c.WatermarkImage); err != nil {
-	// 	return nil, err
-	// }
+	if _, err = auximageprovider.LoadWatermarkDynamincConfigFromEnv(&c.WatermarkImage); err != nil {
+		return nil, err
+	}
 
 	if _, err = workers.LoadConfigFromEnv(&c.Workers); err != nil {
 		return nil, err

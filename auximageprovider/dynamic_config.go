@@ -1,5 +1,9 @@
 package auximageprovider
 
+import (
+	"github.com/imgproxy/imgproxy/v4/ensure"
+)
+
 // DynamicConfig holds the configuration for the auxiliary image provider
 type DynamicConfig struct {
 	Base64Data string
@@ -14,4 +18,10 @@ func NewDefaultDynamicConfig() DynamicConfig {
 		Path:       "",
 		URL:        "",
 	}
+}
+
+func LoadWatermarkDynamincConfigFromEnv(c *DynamicConfig) (*DynamicConfig, error) {
+	c = ensure.Ensure(c, NewDefaultDynamicConfig)
+
+	return c, nil
 }
