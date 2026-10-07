@@ -391,7 +391,7 @@ func (p *Parser) applyWatermarkTextOption(
 	if err != nil {
 		return err
 	}
-	o.Set(keys.WatermarkText, string(text))
+	o.Set(keys.WatermarkText, text)
 
 	return nil
 }
