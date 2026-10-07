@@ -3,11 +3,11 @@ package auximageprovider
 import (
 	"context"
 	"net/http"
-	"fmt"
+	"encoding/base64"
 
-	"github.com/imgproxy/imgproxy/v4/options/keys"
 	"github.com/imgproxy/imgproxy/v4/imagedata"
 	"github.com/imgproxy/imgproxy/v4/options"
+	"github.com/imgproxy/imgproxy/v4/options/keys"
 )
 
 // staticProvider is a simple implementation of ImageProvider, which returns
@@ -21,9 +21,14 @@ type dynamicProvider struct {
 // Get returns the static image data and headers stored in the provider.
 func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.ImageData, http.Header, error) {
 	if text := o.GetString(keys.WatermarkText, ""); text != "" {
-		data, err := s.idf.NewFromBase64(text)
+		bytes, err := base64.RawURLEncoding.DecodeString(text)
 		if err != nil {
-			return nil, nil, fmt.Errorf("watermark_text: %w", err)
+			return nil,nil, err
+		}
+
+		data, err := s.idf.NewFromBytes(bytes)
+		if err != nil {
+			return nil, nil, err
 		}
 		return data, make(http.Header), nil
 	}
@@ -33,7 +38,7 @@ func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.
 // Close releases the static image data held by the provider.
 func (s *dynamicProvider) Close() error {
 	if s.data != nil {
-	return s.data.Close()
+		return s.data.Close()
 	}
 	return nil
 }
@@ -51,19 +56,6 @@ func NewDynamicProvider(
 		err     error
 	)
 
-	switch {
-	case len(c.Base64Data) > 0:
-		data, err = idf.NewFromBase64(c.Base64Data)
-	case len(c.Path) > 0:
-		data, err = idf.NewFromPath(c.Path)
-	case len(c.URL) > 0:
-		data, headers, err = idf.DownloadSync(
-			ctx, c.URL, desc, imagedata.DownloadOptions{},
-		)
-	default:
-		return nil, nil
-	}
-
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +63,6 @@ func NewDynamicProvider(
 	return &dynamicProvider{
 		data:    data,
 		headers: headers,
-		idf: idf,
+		idf:     idf,
 	}, nil
 }
