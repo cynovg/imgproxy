@@ -13,6 +13,7 @@ import (
 type dynamicProvider struct {
 	data    imagedata.ImageData
 	headers http.Header
+	idf     imagedata.Factory
 }
 
 // Get returns the static image data and headers stored in the provider.
@@ -57,8 +58,9 @@ func NewDynamicProvider(
 		return nil, err
 	}
 
-	return &staticProvider{
+	return &dynamicProvider{
 		data:    data,
 		headers: headers,
+		idf: idf,
 	}, nil
 }
