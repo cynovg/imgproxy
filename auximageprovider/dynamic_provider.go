@@ -32,7 +32,10 @@ func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.
 
 // Close releases the static image data held by the provider.
 func (s *dynamicProvider) Close() error {
+	if s.data != nil {
 	return s.data.Close()
+	}
+	return nil
 }
 
 // NewDynamicProvider creates a new ImageProvider from either a base64 string, file path, or URL
