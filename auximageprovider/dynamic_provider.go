@@ -20,12 +20,13 @@ type dynamicProvider struct {
 	data    imagedata.ImageData
 	headers http.Header
 	idf     imagedata.Factory
+	config  DynamicConfig
 }
 
 func (s *dynamicProvider) Get(_ context.Context, o *options.Options) (imagedata.ImageData, http.Header, error) {
 	if text := o.GetString(keys.WatermarkText, ""); text != "" {
-		fontPath := "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-		fontSize := float64(22)
+		fontPath := s.config.Path
+		fontSize := s.config.Size
 		bytes, err := GenerateWatermarkPNG(text, fontSize, fontPath)
 		if err != nil {
 			return nil, nil, err
@@ -102,5 +103,6 @@ func NewDynamicProvider(
 		data:    data,
 		headers: headers,
 		idf:     idf,
+		config:  *c,
 	}, nil
 }
