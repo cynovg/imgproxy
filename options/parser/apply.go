@@ -387,11 +387,11 @@ func (p *Parser) applyWatermarkTextOption(
 	args []string,
 ) error {
 
-	_, err := base64.RawURLEncoding.DecodeString(args[0])
+	text, err := base64.RawURLEncoding.DecodeString(args[0])
 	if err != nil {
 		return err
 	}
-	o.Set(keys.WatermarkText, args[0])
+	o.Set(keys.WatermarkText, text)
 
 	return nil
 }
