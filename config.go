@@ -29,7 +29,7 @@ type HandlerConfigs struct {
 type Config struct {
 	Workers            workers.Config
 	FallbackImage      auximageprovider.StaticConfig
-	WatermarkImage     auximageprovider.StaticConfig
+	WatermarkImage     auximageprovider.DynamicConfig
 	Fetcher            fetcher.Config
 	ClientFeatures     clientfeatures.Config
 	Handlers           HandlerConfigs
@@ -48,7 +48,7 @@ func NewDefaultConfig() Config {
 	return Config{
 		Workers:        workers.NewDefaultConfig(),
 		FallbackImage:  auximageprovider.NewDefaultStaticConfig(),
-		WatermarkImage: auximageprovider.NewDefaultStaticConfig(),
+		WatermarkImage: auximageprovider.NewDefaultDynamicConfig(),
 		Fetcher:        fetcher.NewDefaultConfig(),
 		ClientFeatures: clientfeatures.NewDefaultConfig(),
 		Handlers: HandlerConfigs{
@@ -80,7 +80,7 @@ func LoadConfigFromEnv(c *Config) (*Config, error) {
 		return nil, err
 	}
 
-	if _, err = auximageprovider.LoadWatermarkStaticConfigFromEnv(&c.WatermarkImage); err != nil {
+	if _, err = auximageprovider.LoadWatermarkDynamincConfigFromEnv(&c.WatermarkImage); err != nil {
 		return nil, err
 	}
 

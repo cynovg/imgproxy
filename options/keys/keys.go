@@ -72,6 +72,7 @@ const (
 	WatermarkXOffset  = "watermark" + SuffixXOffset
 	WatermarkYOffset  = "watermark" + SuffixYOffset
 	WatermarkScale    = "watermark.scale"
+	WatermarkText     = "watermark.text"
 
 	Format = "format"
 

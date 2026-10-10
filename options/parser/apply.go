@@ -2,6 +2,7 @@ package optionsparser
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log/slog"
 	"slices"
@@ -376,6 +377,21 @@ func (p *Parser) applyWatermarkOption(ctx context.Context, o *options.Options, a
 			return err
 		}
 	}
+
+	return nil
+}
+
+func (p *Parser) applyWatermarkTextOption(
+	ctx context.Context,
+	o *options.Options,
+	args []string,
+) error {
+
+	text, err := base64.RawURLEncoding.DecodeString(args[0])
+	if err != nil {
+		return err
+	}
+	o.Set(keys.WatermarkText, string(text))
 
 	return nil
 }
